@@ -1,7 +1,7 @@
 {
-  "name": "dynamo-data-migrations",
+  "name": "@dservidie/dynamo-data-migrations",
   "version": "4.1.5",
-  "description": "A library to easily run migrations on DynamoDb with TypeScript.",
+  "description": "A library to easily run migrations on DynamoDB with TypeScript. (forked from dynamo-data-migrations)",
   "main": "build/src/lib/migrateDynamo.js",
   "types": "build/src/lib/migrateDynamo.d.ts",
   "bin": {
@@ -17,7 +17,7 @@
     "lint:fix": "eslint --ext .ts . --fix",
     "prettier": "prettier 'src/**/*.ts'",
     "prettier:fix": "prettier --write 'src/**/*.ts'",
-    "pre-commit": "npm run check-types && npm run lint:fix && npm run prettier:fix && git add .",
+    "pre-commit": "npm run check-types && npm run lint:fix && git add .",
     "pre-push": "npm run test",
     "prepare": "npm run build && husky install",
     "prepublishOnly": "npm test && npm run lint"
@@ -29,7 +29,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/technogise/dynamo-data-migrations.git"
+    "url": "https://github.com/dservidie/dynamo-data-migrations.git"
   },
   "engines": {
     "node": ">=16.0.0",

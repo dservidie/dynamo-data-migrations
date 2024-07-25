@@ -9,12 +9,12 @@ class ERROR extends Error {
     migrated?: string[];
 }
 
-export async function up(profile = 'default') {
+export async function up(profile = 'default', env = '') {
     const ddb = await migrationsDb.getDdb(profile);
-    if (!(await migrationsDb.doesMigrationsLogDbExists(ddb))) {
-        await migrationsDb.configureMigrationsLogDbSchema(ddb);
+    if (!(await migrationsDb.doesMigrationsLogDbExists(ddb, env))) {
+        await migrationsDb.configureMigrationsLogDbSchema(ddb, env);
     }
-    const statusItems = await status(profile);
+    const statusItems = await status(profile, env);
     const pendingItems = _.filter(statusItems, { appliedAt: 'PENDING' });
     const migrated: string[] = [];
     const migrateItem = async (item: { fileName: string; appliedAt: string }) => {
@@ -36,7 +36,7 @@ export async function up(profile = 'default') {
         };
 
         try {
-            await migrationsDb.addMigrationToMigrationsLogDb(migration, ddb);
+            await migrationsDb.addMigrationToMigrationsLogDb(migration, ddb, env);
         } catch (error) {
             const e = error as Error;
             throw new Error(`Could not update migrationsLogDb: ${e.message}`);

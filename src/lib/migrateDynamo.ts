@@ -12,14 +12,14 @@ export const createAction = async (description: string) => {
     return create(description);
 };
 
-export const upAction = async (profile: string) => {
-    return up(profile);
+export const upAction = async (profile: string, env: string) => {
+    return up(profile, env);
 };
 
-export const downAction = async (profile: string, downShift: number) => {
-    return down(profile, downShift);
+export const downAction = async (profile: string, downShift: number, env: string) => {
+    return down(profile, downShift, env);
 };
 
-export const statusAction = async (profile: string) => {
-    return status(profile);
+export const statusAction = async (profile: string, env: string) => {
+    return status(profile, env);
 };

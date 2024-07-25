@@ -9,6 +9,11 @@ class ERROR extends Error {
     migrated?: string[];
 }
 
+const envPrefixOption = new Option(
+    '--env <string>',
+    'Suffix to add to the migrations table name. Allow have more than one migrations table',
+).default('');
+
 function printMigrated(migrated: string[] = [], direction: string) {
     const migratedItemsInfo: string = migrated.map((item) => `${direction}: ${item}`).join('\n');
     console.info(migratedItemsInfo);
@@ -42,6 +47,7 @@ program
 program
     .command('create [description]')
     .description('create a new database migration with the provided description')
+    .addOption(envPrefixOption)
     .action(async (description) => {
         try {
             const fileName = await createAction(description);
@@ -53,11 +59,12 @@ program
 
 program
     .command('up')
-    .addOption(profileOption)
     .description('run all pending database migrations against a provided profile.')
+    .addOption(profileOption)
+    .addOption(envPrefixOption)
     .action(async (option) => {
         try {
-            const migrated = await upAction(option.profile);
+            const migrated = await upAction(option.profile, option.env);
             printMigrated(migrated, 'MIGRATED UP');
         } catch (error) {
             console.error(error);
@@ -68,17 +75,18 @@ program
 
 program
     .command('down')
+    .description('undo the last applied database migration against a provided profile.')
     .addOption(profileOption)
+    .addOption(envPrefixOption)
     .option(
         '--shift <n>',
         'Number of down shift to perform. 0 will rollback all changes',
         (value) => Number.parseInt(value, 10),
         1,
     )
-    .description('undo the last applied database migration against a provided profile.')
     .action(async (option) => {
         try {
-            const migrated = await downAction(option.profile, option.shift);
+            const migrated = await downAction(option.profile, option.shift, option.env);
             printMigrated(migrated, 'MIGRATED DOWN');
         } catch (error) {
             console.error(error);
@@ -87,11 +95,12 @@ program
 
 program
     .command('status')
-    .addOption(profileOption)
     .description('print the changelog of the database against a provided profile')
+    .addOption(profileOption)
+    .addOption(envPrefixOption)
     .action(async (option) => {
         try {
-            const statusItems = await statusAction(option.profile);
+            const statusItems = await statusAction(option.profile, option.env);
             printStatusTable(statusItems);
         } catch (error) {
             console.error(error);
